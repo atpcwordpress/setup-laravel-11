@@ -14,4 +14,6 @@ Route::controller(ProductAPIController::class)->group(function() {
    route::post('product-show/{product_id}','product_show')->name('product-show');
    route::post('product-update/{product_id}','product_update')->name('product-update');
    route::delete('product-delete/{product_id}','product_delete')->name('product-delete');
+
+   route::get('all-record-for-db', 'all_record_for_db')->name('all-record-for-db');
 });

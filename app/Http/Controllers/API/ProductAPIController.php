@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
@@ -180,6 +181,37 @@ class ProductAPIController extends Controller
                 'status' => false,
                 'status_code' => 500,
             ], 500);
+        }
+    }
+
+    public function all_record_for_db()
+    {
+        try {
+            // Fetching data from multiple database connections
+            $products = DB::connection('mysql')->table('product')->get();
+            $orders = DB::connection('ordernow')->table('orders')->get();
+            $invoices = DB::connection('invoice')->table('invoice')->get();
+            $performance_schema = DB::connection('performance_schema')->table('events_statements_summary_global_by_event_name')->get();
+            $innovate_now = DB::connection('innovate_now')->table('users')->get();
+
+            return response()->json([
+                'data' => [
+                    'products' => $products,
+                    'orders' => $orders,
+                    'invoices' => $invoices,
+                    'performance_schema' => $performance_schema,
+                    'innovate_now' => $innovate_now,
+                ],
+                'status' => true,
+                'status_code' => 200,
+                'message' => 'Data retrieved successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'status_code' => 500,
+                'message' => 'Error retrieving data: ' . $e->getMessage(),
+            ]);
         }
     }
 }
